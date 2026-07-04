@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 	pos = 0;
 	line = 1;
 
-	generadorInit();
+	generadorInicializar();
 
 	parse(); /* si hay un error lexico o sintactico, el programa termina aqui */
 
