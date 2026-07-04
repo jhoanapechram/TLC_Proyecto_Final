@@ -87,16 +87,18 @@ void generadorDeclararVariable(const char *nombre) {
 	numVariables++;
 }
 
+// función para guardar el texto acumulado en la memoria en un archivo .c
 void generadorGuardar(const char *nombreArchivo) {
-	FILE *f = fopen(nombreArchivo, "w");
+	FILE *f = fopen(nombreArchivo, "w"); // abrir o crear el archivo para escribir en el ("w")
 	if(f == NULL) {
 		fprintf(stderr, "No se pudo crear el archivo '%s'\n", nombreArchivo);
 		exit(1);
 	}
-	fputs(salida.datos, f);
-	fclose(f);
+	fputs(salida.datos, f); // pasa al archivo todo el texto guardado en la memoria
+	fclose(f); // cierra el archivo
 }
 
+// función para liberar la memoria RAM al sistema
 void generadorLiberar(void) {
 	free(salida.datos);
 	salida.datos = NULL;
@@ -104,26 +106,30 @@ void generadorLiberar(void) {
 	salida.capacidad = 0;
 }
 
+// crea una cadena con un formato de texto específico calculando el tamaño exacto que va a medir
 char *formatoCadena(const char *fmt, ...) {
-	va_list args1, args2;
-	va_start(args1, fmt);
-	va_copy(args2, args1);
+	va_list argumento1, argumento2;
+	va_start(argumento1, fmt); // inicializa la lista argumento1
+	va_copy(argumento2, argumento1); // copia la lista de argumento1 en argumento2
 
-	int necesario = vsnprintf(NULL, 0, fmt, args1);
-	va_end(args1);
+	int necesario = vsnprintf(NULL, 0, fmt, argumento1);
+	va_end(argumento1); // limpiamos la memoria interna
+
+	// con la condición, se detecta si hubo algún error al calcular el tamaño del texto
 	if(necesario < 0) {
 		fprintf(stderr, "Error al formatear cadena\n");
 		exit(1);
 	}
-
+	// se usa la función malloc para apartar el espacio exacto de memoria RAM
 	char *resultado = malloc((size_t)necesario + 1);
-	if(!resultado) {
-		fprintf(stderr, "Error de memoria\n");
+	if(resultado == NULL) {
+		fprintf(stderr, "Error! Memoria RAM agotada\n"); // se imprime el error en casi de que no haya memoria RAM disponible
 		exit(1);
 	}
 
-	vsnprintf(resultado, (size_t)necesario + 1, fmt, args2);
-	va_end(args2);
+	// se escribe el texto final ya formateado en el espacio de memoria apartado
+	vsnprintf(resultado, (size_t)necesario + 1, fmt, argumento2);
+	va_end(argumento2);
 
 	return resultado;
 }
