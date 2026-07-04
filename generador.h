@@ -4,7 +4,7 @@
 /* Modulo encargado de acumular el codigo C equivalente mientras el parser
  * reconoce la gramatica, y de escribirlo al final en un archivo .c */
 
-void  generadorInit(void);
+void  generadorInicializar(void);
 void  generadorAgregar(const char *texto);
 void  generadorIndentar(void);
 void  generadorSubirNivel(void);
