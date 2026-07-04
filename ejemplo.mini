@@ -1,0 +1,17 @@
+begin
+    x = 10;
+    y = 0;
+    print("Iniciando calculo");
+    while (x > 0) {
+        y = y + x;
+        x = x - 1;
+    }
+    print(y);
+    if (y == 55) {
+        print("El resultado es correcto");
+    } else {
+        print("El resultado es incorrecto");
+    }
+    z = (2 + 3) * (4 - 1);
+    print(z);
+end
