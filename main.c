@@ -4,17 +4,14 @@
 #include "sintactico.h"
 #include "generador.h"
 
-int main(int argc, char *argv[])
-{
-	if(argc != 2)
-	{
+int main(int argc, char *argv[]) {
+	if(argc != 2) {
 		fprintf(stderr, "Uso: %s <archivo.mini>\n", argv[0]);
 		return 1;
 	}
 
 	FILE *f = fopen(argv[1], "rb");
-	if(!f)
-	{
+	if(f == NULL) {
 		fprintf(stderr, "No se pudo abrir el archivo '%s'\n", argv[1]);
 		return 1;
 	}
@@ -23,16 +20,14 @@ int main(int argc, char *argv[])
 	long tam = ftell(f);
 	rewind(f);
 
-	if(tam < 0)
-	{
-		fprintf(stderr, "No se pudo determinar el tamano del archivo\n");
+	if(tam < 0) {
+		fprintf(stderr, "No se pudo determinar el tamaño del archivo\n");
 		fclose(f);
 		return 1;
 	}
 
 	char *buffer = malloc((size_t)tam + 1);
-	if(!buffer)
-	{
+	if(buffer == NULL) {
 		fprintf(stderr, "Error de memoria\n");
 		fclose(f);
 		return 1;
@@ -42,17 +37,17 @@ int main(int argc, char *argv[])
 	fclose(f);
 	buffer[leidos] = '\0';
 
-	/* Conectar el buffer leido con las variables globales del lexer */
+	// conectar el buffer leído con las variables globales del lexer
 	input = buffer;
 	pos = 0;
 	line = 1;
 
 	generadorInicializar();
 
-	parse(); /* si hay un error lexico o sintactico, el programa termina aqui */
+	parse(); // si hay un error léxico o sintáctico, el programa termina aquí
 
 	generadorGuardar("salida.c");
-	printf("Codigo C generado exitosamente en 'salida.c'\n");
+	printf("Código C generado exitosamente en 'salida.c'\n");
 	printf("Puedes compilarlo con: gcc salida.c -o salida\n");
 
 	generadorLiberar();
