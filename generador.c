@@ -123,7 +123,7 @@ char *formatoCadena(const char *fmt, ...) {
 	// se usa la función malloc para apartar el espacio exacto de memoria RAM
 	char *resultado = malloc((size_t)necesario + 1);
 	if(resultado == NULL) {
-		fprintf(stderr, "Error! Memoria RAM agotada\n"); // se imprime el error en casi de que no haya memoria RAM disponible
+		fprintf(stderr, "Error! Memoria RAM agotada\n"); // se imprime el error en caso de que no haya memoria RAM disponible
 		exit(1);
 	}
 
