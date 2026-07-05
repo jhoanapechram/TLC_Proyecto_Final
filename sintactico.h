@@ -27,12 +27,10 @@ Eliminación de recursividad izquierda en las expresiones matemáticas:
 NOTA: la gramática original también permite
    <factor> -> <expresión> (< | > | ==) <expresión>
 pero esa alternativa hace que <factor> derive directamente en <expresión>, es decir, es
-RECURSIVIDAD IZQUIERDA y provocaría un bucle infinito. Por eso, la comparación relacional se resuelve un
-nivel más arriba, dentro de <expresión>: primero se reconoce la cadena
-aritmética completa (termino <expresion'>) y, solo si a continuación
+RECURSIVIDAD IZQUIERDA y provocaría un bucle infinito. Por eso, esto se resuelve dentro de <expresión>: primero se reconoce la cadena
+completa (termino <expresion'>) y, solo si a continuación
 aparece <, > o ==, se consume el operador y se reconoce una segunda
-cadena. Esto conserva el mismo uso que le da la gramática
-(comparaciones en if/while) sin la recursividad izquierda.
+cadena. 
 
 En el código, <expresion'> y <termino'> se implementan con un bucle
 "while" dentro de expresionAritmetica()/termino() en vez de una función
