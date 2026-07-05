@@ -25,19 +25,18 @@ Eliminacion de recursividad izquierda en las expresiones matematicas
 
 <factor> -> id | numero | ( <expresion> )
 
-NOTA: la gramatica original tambien permite
-   <factor> -> <expresion> (< | > | ==) <expresion>
-pero esa alternativa hace que <factor> derive directamente en <expresion>
-(factor -> expresion -> termino -> factor -> ...), es decir, es
-RECURSIVIDAD IZQUIERDA y provocaria un bucle infinito. Por eso, la comparacion relacional se resuelve un
-nivel mas arriba, dentro de <expresion>: primero se reconoce la cadena
-aritmetica completa (termino <expresion'>) y, solo si a continuacion
+NOTA: la gramática original también permite
+   <factor> -> <expresión> (< | > | ==) <expresión>
+pero esa alternativa hace que <factor> derive directamente en <expresión>, es decir, es
+RECURSIVIDAD IZQUIERDA y provocaría un bucle infinito. Por eso, la comparación relacional se resuelve un
+nivel más arriba, dentro de <expresión>: primero se reconoce la cadena
+aritmética completa (termino <expresion'>) y, solo si a continuación
 aparece <, > o ==, se consume el operador y se reconoce una segunda
-cadena. Esto conserva el mismo uso que le da la gramatica
+cadena. Esto conserva el mismo uso que le da la gramática
 (comparaciones en if/while) sin la recursividad izquierda.
 
-En el codigo, <expresion'> y <termino'> se implementan con un bucle
-"while" dentro de expresionAritmetica()/termino() en vez de una funcion
+En el código, <expresion'> y <termino'> se implementan con un bucle
+"while" dentro de expresionAritmetica()/termino() en vez de una función
 separada; es la misma idea, solo que de forma iterativa.
 
 */
