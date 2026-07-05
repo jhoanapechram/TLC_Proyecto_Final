@@ -9,7 +9,7 @@ int pos = 0;
 int line = 1;
 
 static void errorLexico(const char *msg) {
-	printf("Error léxico (linea %d): %s\n", line, msg);
+	printf("Error léxico (línea %d): %s\n", line, msg);
 	exit(1);
 }
 
