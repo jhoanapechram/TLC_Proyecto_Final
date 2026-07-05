@@ -29,12 +29,11 @@ NOTA: la gramatica original tambien permite
    <factor> -> <expresion> (< | > | ==) <expresion>
 pero esa alternativa hace que <factor> derive directamente en <expresion>
 (factor -> expresion -> termino -> factor -> ...), es decir, es
-RECURSIVIDAD IZQUIERDA y provocaria un bucle infinito en un parser de
-descenso recursivo. Por eso, la comparacion relacional se resuelve un
+RECURSIVIDAD IZQUIERDA y provocaria un bucle infinito. Por eso, la comparacion relacional se resuelve un
 nivel mas arriba, dentro de <expresion>: primero se reconoce la cadena
 aritmetica completa (termino <expresion'>) y, solo si a continuacion
 aparece <, > o ==, se consume el operador y se reconoce una segunda
-cadena aritmetica. Esto conserva el mismo uso que le da la gramatica
+cadena. Esto conserva el mismo uso que le da la gramatica
 (comparaciones en if/while) sin la recursividad izquierda.
 
 En el codigo, <expresion'> y <termino'> se implementan con un bucle
