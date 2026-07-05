@@ -1,9 +1,9 @@
 #ifndef SINTACTICO_H
 #define SINTACTICO_H
 
-//
+/*
 
-Gramatica de MiniLang:
+Gramática de MiniLang:
 
 <programa>          ::= begin <lista_sentencias> end
 <lista_sentencias>  ::= <sentencia> <lista_sentencias> | e
@@ -14,8 +14,7 @@ Gramatica de MiniLang:
 <print>             ::= print ( <expresion_o_cadena> ) ;
 <expresion_o_cadena> ::= <expresion> | cadena
 
-Eliminacion de recursividad izquierda en las expresiones matematicas
-(mismo procedimiento E/E', T/T' visto en clase, aplicado aqui):
+Eliminación de recursividad izquierda en las expresiones matemáticas:
 
 <expresion>  -> <termino> <expresion'>
 <expresion'> -> (+ | -) <termino> <expresion'> | e
@@ -39,7 +38,7 @@ En el código, <expresion'> y <termino'> se implementan con un bucle
 "while" dentro de expresionAritmetica()/termino() en vez de una función
 separada; es la misma idea, solo que de forma iterativa.
 
-//
+*/
 
 void parse();
 
