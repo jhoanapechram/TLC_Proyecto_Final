@@ -7,22 +7,19 @@
 
 Token current;
 
-void error()
-{
-	printf("Error sintactico (linea %d): token inesperado '%s'\n",
+void error() {
+	printf("Error sintáctico (línea %d): token inesperado '%s'\n",
 	       current.line, current.lexema);
 	exit(1);
 }
 
-void match(TokenType expected)
-{
+void match(TokenType expected) {
 	if(current.type == expected)
 		current = getNextToken();
 	else
 		error();
 }
 
-/* Prototipos internos (necesarios por la recursividad mutua del parser) */
 char *factor();
 char *termino();
 char *expresionAritmetica();
@@ -35,49 +32,44 @@ void sentenciaPrint();
 void sentencia();
 void listaSentencias();
 
-/* -------------------------------------------------------------------- */
-/* EXPRESIONES                                                          */
-/* -------------------------------------------------------------------- */
+// Expresiones //
+// <factor> -> id | numero | ( <expresion> )
 
-/* <factor> -> id | numero | ( <expresion> ) */
-char *factor()
-{
+char *factor() {
 	char *resultado = NULL;
 
-	if(current.type == TOKEN_ID)
-	{
+	if(current.type == TOKEN_ID) {
 		resultado = formatoCadena("%s", current.lexema);
 		match(TOKEN_ID);
 	}
-	else if(current.type == TOKEN_NUMBER)
-	{
+	else {
+		if(current.type == TOKEN_NUMBER) {
 		resultado = formatoCadena("%s", current.lexema);
 		match(TOKEN_NUMBER);
+		}
+		else {
+			if(current.type == TOKEN_LPAREN) {
+			match(TOKEN_LPAREN);
+			char *interior = expresion();
+			match(TOKEN_RPAREN);
+			resultado = formatoCadena("(%s)", interior);
+			free(interior);
+			}
+			else {
+				error();
+			}
+		}
 	}
-	else if(current.type == TOKEN_LPAREN)
-	{
-		match(TOKEN_LPAREN);
-		char *interior = expresion();
-		match(TOKEN_RPAREN);
-		resultado = formatoCadena("(%s)", interior);
-		free(interior);
-	}
-	else
-	{
-		error();
-	}
-
 	return resultado;
 }
 
-/* <termino> -> <factor> <termino'>
- * <termino'> -> (* | /) <factor> <termino'> | e   (implementado con while) */
-char *termino()
-{
-	char *izq = factor();
+// <termino> -> <factor> <termino'>
+// <termino'> -> (* | /) <factor> <termino'> | e   (implementado con while)
 
-	while(current.type == TOKEN_MULT || current.type == TOKEN_DIV)
-	{
+char *termino() {
+	char *izq = factor();
+	
+	while(current.type == TOKEN_MULT || current.type == TOKEN_DIV) {
 		TokenType opType = current.type;
 		char op = (opType == TOKEN_MULT) ? '*' : '/';
 		match(opType);
@@ -88,18 +80,16 @@ char *termino()
 		free(der);
 		izq = nuevo;
 	}
-
 	return izq;
 }
 
-/* <expresion> -> <termino> <expresion'>
- * <expresion'> -> (+ | -) <termino> <expresion'> | e   (implementado con while) */
-char *expresionAritmetica()
-{
+// <expresion> -> <termino> <expresion'>
+// <expresion'> -> (+ | -) <termino> <expresion'> | e   (implementado con while)
+
+char *expresionAritmetica() {
 	char *izq = termino();
 
-	while(current.type == TOKEN_PLUS || current.type == TOKEN_MINUS)
-	{
+	while(current.type == TOKEN_PLUS || current.type == TOKEN_MINUS) {
 		TokenType opType = current.type;
 		char op = (opType == TOKEN_PLUS) ? '+' : '-';
 		match(opType);
@@ -114,14 +104,10 @@ char *expresionAritmetica()
 	return izq;
 }
 
-/* <expresion> completa: cadena aritmetica + comparacion relacional opcional
- * (ver la nota en sintactico.h sobre por que se resuelve aqui y no en <factor>) */
-char *expresion()
-{
+char *expresion() {
 	char *izq = expresionAritmetica();
 
-	if(current.type == TOKEN_LT || current.type == TOKEN_GT || current.type == TOKEN_EQ)
-	{
+	if(current.type == TOKEN_LT || current.type == TOKEN_GT || current.type == TOKEN_EQ) {
 		const char *op = (current.type == TOKEN_LT) ? "<" :
 		                 (current.type == TOKEN_GT) ? ">" : "==";
 		match(current.type);
@@ -132,17 +118,13 @@ char *expresion()
 		free(der);
 		izq = nuevo;
 	}
-
 	return izq;
 }
 
-/* -------------------------------------------------------------------- */
-/* SENTENCIAS                                                           */
-/* -------------------------------------------------------------------- */
+// Sentencias //
+// <asignacion> -> id = <expresion> ;
 
-/* <asignacion> -> id = <expresion> ; */
-void asignacion()
-{
+void asignacion() {
 	char nombre[MAX_LEXEMA];
 	strncpy(nombre, current.lexema, MAX_LEXEMA - 1);
 	nombre[MAX_LEXEMA - 1] = '\0';
@@ -154,10 +136,9 @@ void asignacion()
 
 	generadorIndentar();
 
-	/* Como MiniLang no declara variables, se declara automaticamente
-	 * la primera vez que se le asigna un valor */
-	if(!generadorVariableDeclarada(nombre))
-	{
+	// Como MiniLang no declara variables, se declara automáticamente la primera vez que se le asigna un valor
+	
+	if(generadorVariableDeclarada(nombre) == NULL) 	{
 		generadorDeclararVariable(nombre);
 		generadorAgregar("int ");
 	}
@@ -170,9 +151,9 @@ void asignacion()
 	free(expr);
 }
 
-/* <if> -> if ( <expresion> ) { <lista_sentencias> } [ else { <lista_sentencias> } ] */
-void sentenciaIf()
-{
+// <if> -> if ( <expresion> ) { <lista_sentencias> } [ else { <lista_sentencias> } ]
+
+void sentenciaIf() {
 	match(TOKEN_IF);
 	match(TOKEN_LPAREN);
 	char *cond = expresion();
@@ -193,8 +174,7 @@ void sentenciaIf()
 	generadorIndentar();
 	generadorAgregar("}\n");
 
-	if(current.type == TOKEN_ELSE)
-	{
+	if(current.type == TOKEN_ELSE) {
 		match(TOKEN_ELSE);
 		match(TOKEN_LBRACE);
 
@@ -211,9 +191,9 @@ void sentenciaIf()
 	}
 }
 
-/* <while> -> while ( <expresion> ) { <lista_sentencias> } */
-void sentenciaWhile()
-{
+// <while> -> while ( <expresion> ) { <lista_sentencias> }
+
+void sentenciaWhile() {
 	match(TOKEN_WHILE);
 	match(TOKEN_LPAREN);
 	char *cond = expresion();
@@ -235,16 +215,15 @@ void sentenciaWhile()
 	generadorAgregar("}\n");
 }
 
-/* <print> -> print ( <expresion_o_cadena> ) ; */
-void sentenciaPrint()
-{
+// <print> -> print ( <expresion_o_cadena> ) ;
+
+void sentenciaPrint() {
 	match(TOKEN_PRINT);
 	match(TOKEN_LPAREN);
 
 	generadorIndentar();
 
-	if(current.type == TOKEN_STRING)
-	{
+	if(current.type == TOKEN_STRING) {
 		char texto[MAX_LEXEMA];
 		strncpy(texto, current.lexema, MAX_LEXEMA - 1);
 		texto[MAX_LEXEMA - 1] = '\0';
@@ -254,8 +233,7 @@ void sentenciaPrint()
 		generadorAgregar(texto);
 		generadorAgregar("\\n\");\n");
 	}
-	else
-	{
+	else {
 		char *expr = expresion();
 		generadorAgregar("printf(\"%d\\n\", ");
 		generadorAgregar(expr);
@@ -267,23 +245,22 @@ void sentenciaPrint()
 	match(TOKEN_SEMI);
 }
 
-/* <sentencia> -> <asignacion> | <if> | <while> | <print> */
-void sentencia()
-{
-	switch(current.type)
-	{
-	case TOKEN_ID:    asignacion();     break;
-	case TOKEN_IF:    sentenciaIf();    break;
-	case TOKEN_WHILE: sentenciaWhile(); break;
-	case TOKEN_PRINT: sentenciaPrint(); break;
-	default:
-		error();
+// <sentencia> -> <asignacion> | <if> | <while> | <print>
+
+void sentencia() {
+	switch(current.type) {
+		case TOKEN_ID:    asignacion();     break;
+		case TOKEN_IF:    sentenciaIf();    break;
+		case TOKEN_WHILE: sentenciaWhile(); break;
+		case TOKEN_PRINT: sentenciaPrint(); break;
+		default:
+			error();
 	}
 }
 
-/* <lista_sentencias> -> <sentencia> <lista_sentencias> | e */
-void listaSentencias()
-{
+// <lista_sentencias> -> <sentencia> <lista_sentencias> | e
+
+void listaSentencias() {
 	while(current.type == TOKEN_ID    ||
 	      current.type == TOKEN_IF    ||
 	      current.type == TOKEN_WHILE ||
@@ -293,28 +270,21 @@ void listaSentencias()
 	}
 }
 
-/* -------------------------------------------------------------------- */
-/* PROGRAMA                                                             */
-/* -------------------------------------------------------------------- */
+// Programa //
+// <programa> -> begin <lista_sentencias> end
 
-/* <programa> -> begin <lista_sentencias> end */
-void parse()
-{
+void parse() {
 	current = getNextToken();
 
 	match(TOKEN_BEGIN);
-
 	generadorAgregar("#include <stdio.h>\n\nint main(void) {\n");
-
 	listaSentencias();
-
 	match(TOKEN_END);
-
 	generadorIndentar();
 	generadorAgregar("return 0;\n}\n");
 
 	if(current.type == TOKEN_EOF)
-		printf("El programa es sintacticamente CORRECTO.\n");
+		printf("El programa es sintácticamente CORRECTO\n");
 	else
 		error();
 }
