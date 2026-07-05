@@ -1,7 +1,7 @@
 #ifndef SINTACTICO_H
 #define SINTACTICO_H
 
-/*
+//
 
 Gramatica de MiniLang:
 
@@ -39,7 +39,7 @@ En el código, <expresion'> y <termino'> se implementan con un bucle
 "while" dentro de expresionAritmetica()/termino() en vez de una función
 separada; es la misma idea, solo que de forma iterativa.
 
-*/
+//
 
 void parse();
 
