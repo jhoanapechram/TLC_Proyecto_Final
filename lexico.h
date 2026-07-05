@@ -4,17 +4,17 @@
 #define MAX_LEXEMA 256
 
 typedef enum {
-	/* Palabras reservadas */
+	// Palabras reservadas
 	TOKEN_BEGIN, TOKEN_END, TOKEN_IF, TOKEN_ELSE, TOKEN_WHILE, TOKEN_PRINT,
-	/* Categorias con valor variable */
+	// Categorías con valor variable
 	TOKEN_ID, TOKEN_NUMBER, TOKEN_STRING,
-	/* Operadores aritmeticos */
+	// Operadores aritméticos
 	TOKEN_PLUS, TOKEN_MINUS, TOKEN_MULT, TOKEN_DIV, TOKEN_ASSIGN,
-	/* Operadores relacionales */
+	// Operadores relacionales
 	TOKEN_LT, TOKEN_GT, TOKEN_EQ,
-	/* Delimitadores */
+	// Delimitadores
 	TOKEN_LPAREN, TOKEN_RPAREN, TOKEN_LBRACE, TOKEN_RBRACE, TOKEN_SEMI,
-	/* Fin de archivo */
+	// Fin de archivo
 	TOKEN_EOF
 } TokenType;
 
