@@ -9,10 +9,10 @@ ademas genera automaticamente su traduccion equivalente en lenguaje C.
 ```
 .
 ├── lexico.h        # Tipos de token y prototipo del lexer
-├── lexico.c        # Analizador lexico (getNextToken)
-├── sintactico.h     # Gramatica documentada y prototipo del parser
-├── sintactico.c     # Parser de descenso recursivo (analisis + traduccion)
-├── generador.h      # Prototipos del generador de codigo C
+├── lexico.c        # Analizador léxico (getNextToken)
+├── sintactico.h     # Gramática documentada y prototipo del parser
+├── sintactico.c     # Parser de descenso recursivo (análisis + traducción)
+├── generador.h      # Prototipos del generador de código C
 ├── generador.c       # Buffer de salida y tabla de variables
 ├── main.c             # Punto de entrada: lee el archivo .mini y orquesta todo
 ├── ejemplo.mini       # Programa de ejemplo en MiniLang
