@@ -16,7 +16,6 @@ static void errorLexico(const char *msg)
 
 Token getNextToken()
 {
-	/* Saltar espacios, tabuladores y saltos de linea (contando lineas) */
 	for(;;)
 	{
 		char c = input[pos];
@@ -41,7 +40,6 @@ Token getNextToken()
 	if(c == '\0')
 		return (Token){TOKEN_EOF, "EOF", lineaInicio};
 
-	/* Identificadores y palabras reservadas: [A-Za-z_][A-Za-z0-9_]* */
 	if(isalpha((unsigned char)c) || c == '_')
 	{
 		int inicio = pos;
@@ -68,7 +66,6 @@ Token getNextToken()
 		return t;
 	}
 
-	/* Numeros enteros: [0-9][0-9]* */
 	if(isdigit((unsigned char)c))
 	{
 		int inicio = pos;
@@ -88,10 +85,9 @@ Token getNextToken()
 		return t;
 	}
 
-	/* Cadenas de texto: "[A-Za-z0-9_ ]*" */
 	if(c == '"')
 	{
-		pos++; /* saltar comilla de apertura */
+		pos++;
 		int inicio = pos;
 
 		while(input[pos] != '"')
@@ -115,11 +111,10 @@ Token getNextToken()
 		strncpy(t.lexema, input + inicio, len);
 		t.lexema[len] = '\0';
 
-		pos++; /* saltar comilla de cierre */
+		pos++;
 		return t;
 	}
-
-	/* Operadores y delimitadores */
+	
 	pos++;
 	Token t;
 	t.line = lineaInicio;
