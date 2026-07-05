@@ -136,7 +136,7 @@ void asignacion() {
 
 	generadorIndentar();
 
-	// Como MiniLang no declara variables, se declara automáticamente la primera vez que se le asigna un valor
+	//Se declaran variables automáticamente
 	
 	if(generadorVariableDeclarada(nombre) == NULL) 	{
 		generadorDeclararVariable(nombre);
